@@ -19,6 +19,8 @@ import (
 )
 
 func checkMessageRouting(t *testing.T, topic string, pubs []*PubSub, subs []*Subscription) {
+	t.Helper()
+
 	data := make([]byte, 16)
 	rand.Read(data)
 
@@ -35,6 +37,8 @@ func checkMessageRouting(t *testing.T, topic string, pubs []*PubSub, subs []*Sub
 }
 
 func getNetHosts(t *testing.T, ctx context.Context, n int) []host.Host {
+	t.Helper()
+
 	var out []host.Host
 
 	for i := 0; i < n; i++ {
@@ -47,6 +51,8 @@ func getNetHosts(t *testing.T, ctx context.Context, n int) []host.Host {
 }
 
 func connect(t *testing.T, a, b host.Host) {
+	t.Helper()
+
 	pinfo := a.Peerstore().PeerInfo(a.ID())
 	err := b.Connect(context.Background(), pinfo)
 	if err != nil {
@@ -55,14 +61,20 @@ func connect(t *testing.T, a, b host.Host) {
 }
 
 func sparseConnect(t *testing.T, hosts []host.Host) {
+	t.Helper()
+
 	connectSome(t, hosts, 3)
 }
 
 func denseConnect(t *testing.T, hosts []host.Host) {
+	t.Helper()
+
 	connectSome(t, hosts, 10)
 }
 
 func connectSome(t *testing.T, hosts []host.Host, d int) {
+	t.Helper()
+
 	for i, a := range hosts {
 		for j := 0; j < d; j++ {
 			n := rand.Intn(len(hosts))
@@ -79,6 +91,8 @@ func connectSome(t *testing.T, hosts []host.Host, d int) {
 }
 
 func connectAll(t *testing.T, hosts []host.Host) {
+	t.Helper()
+
 	for i, a := range hosts {
 		for j, b := range hosts {
 			if i == j {
@@ -103,6 +117,8 @@ func getPubsubs(ctx context.Context, hs []host.Host, opts ...Option) []*PubSub {
 }
 
 func assertReceive(t *testing.T, ch *Subscription, exp []byte) {
+	t.Helper()
+
 	select {
 	case msg := <-ch.ch:
 		if !bytes.Equal(msg.GetData(), exp) {
